@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mukyu.github.io/"/>
-  <updated>2017-08-20T15:58:47.950Z</updated>
+  <updated>2017-08-20T17:02:34.071Z</updated>
   <id>https://mukyu.github.io/</id>
   
   <author>
@@ -20,12 +20,12 @@
     <link href="https://mukyu.github.io/2017/08/19/Java%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
     <id>https://mukyu.github.io/2017/08/19/Java字符串常量池-学习总结/</id>
     <published>2017-08-19T14:37:09.000Z</published>
-    <updated>2017-08-20T15:58:47.950Z</updated>
+    <updated>2017-08-20T17:02:34.071Z</updated>
     
     <content type="html"><![CDATA[<h2 id="需要知道的几种常量池类型"><a href="#需要知道的几种常量池类型" class="headerlink" title="需要知道的几种常量池类型"></a>需要知道的几种常量池类型</h2><h3 id="class文件中的常量池"><a href="#class文件中的常量池" class="headerlink" title="class文件中的常量池"></a>class文件中的常量池</h3><p>在class文件中存在一个常量池，主要存放编译期间生成的<a href="http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10" target="_blank" rel="external">字面量</a>和符号引用。其中的字面量就包括我们在java代码中用双引号括起来的字符串。我们可以通过jdk自带的<code>javap</code>工具查看class文件中的常量池和编译后的字节码。以下为java源码与<code>javap -v</code>部分输出：<br>java源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String... args)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"hello"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><code>javap -v</code>的部分输出：<br><figure class="highlight console"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">C:\...&gt;javap -v Main</div><div class="line">...(系统信息等)</div><div class="line">Constant Pool:</div><div class="line">   ...(其他字面量和符号引用)</div><div class="line"><span class="meta">   #</span>3 = String             #23            // hello</div><div class="line">   ...</div><div class="line"><span class="meta">  #</span>23 = Utf8               hello</div><div class="line">   ...</div><div class="line">...(字节码、行号、本地变量表等)</div></pre></td></tr></table></figure></p>
-<p>这两项分别表示class文件常量池中的<code>CONSTANT_String</code>和<code>CONSTANT_Utf8</code>类型的常量。其中，<code>CONSTANT_String</code>即表示String常量的类型，但它并没有持有String常量的内容，而是指向另一个常量类型为<code>CONSTANT_Utf8</code>的常量，在那里才真正存储着String常量的内容（注意这里仅仅保存着内容，而不是字符串实例）。具体的class文件中的常量池格式可以查看<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4" target="_blank" rel="external">JVM规范-4.4. The Constant Pool</a>。</p>
-<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>直接查看<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.5" target="_blank" rel="external">JVM规范-2.5.5. Run-Time Constant Pool</a>。<br>原文：</p>
+<p>这两项分别表示class文件常量池中的<code>CONSTANT_String</code>和<code>CONSTANT_Utf8</code>类型的常量。其中，<code>CONSTANT_String</code>表示String常量的类型，但它并没有持有String常量的内容，而是指向另一个常量类型为<code>CONSTANT_Utf8</code>的常量，在那里才真正存储着String常量的内容（注意这里仅仅保存着内容，而不是字符串实例）。具体的class文件中的常量池格式可以查看<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4" target="_blank" rel="external">JVM规范-4.4. The Constant Pool</a>。</p>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>直接查看<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.5" target="_blank" rel="external">JVM规范-2.5.5. Run-Time Constant Pool</a>：</p>
 <blockquote>
 <p>2.5.5. Run-Time Constant Pool</p>
 <p>A run-time constant pool is a per-class or per-interface run-time representation of the constant_pool table in a class file (<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4" target="_blank" rel="external">§4.4</a>). It contains several kinds of constants, ranging from numeric literals known at compile-time to method and field references that must be resolved at run-time. The run-time constant pool serves a function similar to that of a symbol table for a conventional programming language, although it contains a wider range of data than a typical symbol table.</p>
@@ -35,7 +35,7 @@
 </blockquote>
 <p>大意是，JVM在加载类和接口的时候都会在JVM<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4" target="_blank" rel="external">方法区</a>中申请一块内存作为运行时常量池，运行时常量池的内容是class文件中常量池内容的体现。此外还提到，在加载类或接口时，所申请的运行时常量池的内存大小大于方法区所能申请的大小时，则会抛出<code>OutOfMemoryError</code>。<br>在这里可以简单的理解为class文件常量池中的字面量和符号引用等内容会在类加载时进入对应的运行时常量池中。</p>
 <h3 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h3><p>字符串常量池是JVM所维护的一个字符串实例的引用表，在<a href="https://zh.wikipedia.org/wiki/HotSpot" target="_blank" rel="external">HotSpot VM</a>中，它是一个叫做StringTable的全局表。在字符串常量池中维护的是字符串实例的引用，这些被维护的引用所指的字符串实例，被称作”被驻留的字符串”或”interned string”或通常所说的”进入了字符串常量池的字符串”。</p>
-<h2 id="有关String的intern方法"><a href="#有关String的intern方法" class="headerlink" title="有关String的intern方法"></a>有关String的intern方法</h2><p>查看<code>String.intern()</code>的Java Doc。<br>原文：</p>
+<h2 id="有关String的intern方法"><a href="#有关String的intern方法" class="headerlink" title="有关String的intern方法"></a>有关String的intern方法</h2><p>查看<code>String.intern()</code>的Java Doc：</p>
 <blockquote>
 <p>java.lang.String<br>@NotNull<br>public String intern()<br>External annotations available:<br>@org.jetbrains.annotations.NotNull<br>Returns a canonical representation for the string object.<br>A pool of strings, initially empty, is maintained privately by the class String.<br>When the intern method is invoked, if the pool already contains a string equal to this String object as determined by the equals(Object) method, then the string from the pool is returned. Otherwise, this String object is added to the pool and a reference to this String object is returned.<br>It follows that for any two strings s and t, s.intern() == t.intern() is true if and only if s.equals(t) is true.<br>All literal strings and string-valued constant expressions are interned. String literals are defined in section 3.10.5 of the The Java™ Language Specification.<br>Returns:<br>a string that has the same contents as this string, but is guaranteed to be from a pool of unique strings.</p>
 </blockquote>
@@ -44,12 +44,12 @@
 <blockquote>
 <p>Moreover, a string literal always refers to the same instance of class String. This is because string literals - or, more generally, strings that are the values of constant expressions (§15.28) - are “interned” so as to share unique instances, using the method String.intern.</p>
 </blockquote>
-<p>即字符串字面量或内容相同的字符串常量表达式，例如<code>&quot;hello&quot;</code>与<code>&quot;hel&quot; + &quot;lo&quot;</code>都指向同一个字符串对象实例</p>
+<p>即字符串字面量或内容相同的字符串常量表达式，例如<code>&quot;hello&quot;</code>与<code>&quot;hel&quot; + &quot;lo&quot;</code>都指向同一个字符串对象实例。</p>
 <h2 id="字符串的创建"><a href="#字符串的创建" class="headerlink" title="字符串的创建"></a>字符串的创建</h2><p>通过一个简单的案例来了解字符串的创建过程：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String... args)</span> </span>&#123;</div><div class="line">        String s1 = <span class="string">"hello"</span>;</div><div class="line">        System.out.println(s1);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <ol>
-<li>首先在编译期间，<code>&quot;hello&quot;</code>作为字符串的字面量，会被保存在class文件的常量池中，具体为一个<code>CONSTANT_String</code>类型的常量指向另一个<code>CONSTANT_Utf8</code>类型的常量，而<code>CONSTANT_Utf8</code>类型的常量中保存着<code>hello</code>这几个字符的Unicode编码。</li>
-<li>接着在Main.class文件被加载时，会在方法区中申请一个块内存作为Main类的运行时常量池，并将Main.class文件中常量池的内容放进运行时常量池中。注意此时，还没有创建”hello”字符串的任何实例。</li>
-<li>接着到执行<code>String s1 = &quot;hello&quot;;</code>时，表示”hello”字面量的<code>CONSTANT_String</code>类型的常量会被推到栈顶，此时会发现此变量尚未进入resolve阶段，因此会先执行resolve。在resolve阶段，首先会先查看字符串常量池中是否有相同内容的字符串实例的引用，如果有，则直接使用该引用，否则会在堆内存中创建一个新的字符串实例，其内容与<code>CONSTANT_String</code>类型的常量所指向另一个<code>CONSTANT_Utf8</code>类型的常量中的内容一致，接着将这个引用添加到字符串常量池中，最后返回该引用。</li>
+<li>首先在编译期间，<code>&quot;hello&quot;</code>作为字符串的字面量，会被保存在class文件的常量池中，具体为一个<code>CONSTANT_String</code>类型的常量指向另一个<code>CONSTANT_Utf8</code>类型的常量，然后<code>CONSTANT_Utf8</code>类型的常量中保存着<code>hello</code>这几个字符的Unicode编码。</li>
+<li>接着在Main.class文件被加载时，会在方法区中申请一块内存作为Main类的运行时常量池，并将Main.class文件中常量池的内容放进运行时常量池中。注意此时，还没有创建”hello”字符串的任何实例。</li>
+<li>接着到执行<code>String s1 = &quot;hello&quot;;</code>时，表示”hello”字面量的<code>CONSTANT_String</code>类型的常量会被推到栈顶，此时会发现此常量尚未进入resolve阶段，因此会先执行resolve。在resolve阶段，首先会先查看字符串常量池中是否有相同内容的字符串实例的引用，如果有，则直接使用该引用，否则会在堆内存中创建一个新的字符串实例，其内容与<code>CONSTANT_String</code>类型的常量所指向<code>CONSTANT_Utf8</code>类型的常量中的内容一致，接着将这个引用添加到字符串常量池中，最后返回该引用。</li>
 <li>最后将引用赋给<code>s1</code>，打印并return。</li>
 </ol>
 <p>有几点需要注意的：</p>
@@ -58,6 +58,8 @@
 <li>相同的字符串的字面量表示同一个字符串对象实例。</li>
 <li>字符串字面量所表示的字符串对象实例并非一定在类加载阶段实例化。而是在resolve阶段，而resolve阶段的执行是可以延迟的。可以理解为当执行到字面量所在的代码时才会进入resolve阶段(对应的字节码指令为ldc)。</li>
 </ol>
+<h3 id="关于-String-s-new-String-“hello”"><a href="#关于-String-s-new-String-“hello”" class="headerlink" title="关于 String s = new String(“hello”)"></a>关于 String s = new String(“hello”)</h3><p>根据这行代码执行时的上下文环境不同，具体执行的内容也不同。若在执行此代码之前，”hello”字符串已经在字符串常量池中(即，之前已出现过”hello”字面量或者通过String.intern方法将”hello”字符串加入字符串常量池中了)，则只会在堆中创建一个新的字符串实例。否则，会先在堆中创建”hello”实例，添加该实例的引用到字符串常量池中，接着根据该实例再创建一个新的内容一致的字符串对象赋值给变量s。</p>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="http://docs.oracle.com/javase/specs/index.html" target="_blank" rel="external">Java Language and Virtual Machine Specifications</a><br><a href="http://rednaxelafx.iteye.com/blog/774673" target="_blank" rel="external">请别再拿“String s = new String(“xyz”);创建了多少个String实例”来面试了吧</a><br><a href="https://www.zhihu.com/question/55994121/answer/147296098" target="_blank" rel="external">Java 中new String(“字面量”) 中 “字面量” 是何时进入字符串常量池的? - 木女孩的回答 - 知乎</a><br><a href="https://zhihu.com/question/57124207/answer/151835713" target="_blank" rel="external">Java中，这些字符串什么时候进入常量池的？ - RednaxelaFX的回答 - 知乎</a><br><a href="https://javaranch.com/journal/200409/ScjpTipLine-StringsLiterally.html" target="_blank" rel="external">Strings, Literally - by Corey McGlone</a></p>
 ]]></content>
     
     <summary type="html">
