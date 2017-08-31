@@ -96,18 +96,18 @@
 
 
 
-<meta name="description" content="需要知道的几种常量池类型class文件中的常量池在class文件中存在一个常量池，主要存放编译期间生成的字面量和符号引用。其中的字面量就包括我们在java代码中用双引号括起来的字符串。我们可以通过jdk自带的javap工具查看class文件中的常量池和编译后的字节码。以下为java源码与javap -v部分输出：java源码：12345public class Main &amp;#123;    pub">
+<meta name="description" content="有关字符串如何在内存中创建和共享的。涉及字符串字面量、字符串常量池、class文件内容等。">
 <meta name="keywords" content="Java,String">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java字符串常量池-学习总结">
 <meta property="og:url" content="https://mukyu.github.io/2017/08/19/Java字符串常量池-学习总结/index.html">
 <meta property="og:site_name" content="Mukyu">
-<meta property="og:description" content="需要知道的几种常量池类型class文件中的常量池在class文件中存在一个常量池，主要存放编译期间生成的字面量和符号引用。其中的字面量就包括我们在java代码中用双引号括起来的字符串。我们可以通过jdk自带的javap工具查看class文件中的常量池和编译后的字节码。以下为java源码与javap -v部分输出：java源码：12345public class Main &amp;#123;    pub">
+<meta property="og:description" content="有关字符串如何在内存中创建和共享的。涉及字符串字面量、字符串常量池、class文件内容等。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-20T17:02:34.071Z">
+<meta property="og:updated_time" content="2017-08-23T15:12:29.135Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java字符串常量池-学习总结">
-<meta name="twitter:description" content="需要知道的几种常量池类型class文件中的常量池在class文件中存在一个常量池，主要存放编译期间生成的字面量和符号引用。其中的字面量就包括我们在java代码中用双引号括起来的字符串。我们可以通过jdk自带的javap工具查看class文件中的常量池和编译后的字节码。以下为java源码与javap -v部分输出：java源码：12345public class Main &amp;#123;    pub">
+<meta name="twitter:description" content="有关字符串如何在内存中创建和共享的。涉及字符串字面量、字符串常量池、class文件内容等。">
 
 
 
@@ -369,7 +369,9 @@
       
 
       
-        <h2 id="需要知道的几种常量池类型"><a href="#需要知道的几种常量池类型" class="headerlink" title="需要知道的几种常量池类型"></a>需要知道的几种常量池类型</h2><h3 id="class文件中的常量池"><a href="#class文件中的常量池" class="headerlink" title="class文件中的常量池"></a>class文件中的常量池</h3><p>在class文件中存在一个常量池，主要存放编译期间生成的<a href="http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10" target="_blank" rel="external">字面量</a>和符号引用。其中的字面量就包括我们在java代码中用双引号括起来的字符串。我们可以通过jdk自带的<code>javap</code>工具查看class文件中的常量池和编译后的字节码。以下为java源码与<code>javap -v</code>部分输出：<br>java源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String... args)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"hello"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+        <p>有关字符串如何在内存中创建和共享的。涉及字符串字面量、字符串常量池、class文件内容等。</p>
+<a id="more"></a>
+<h2 id="需要知道的几种常量池类型"><a href="#需要知道的几种常量池类型" class="headerlink" title="需要知道的几种常量池类型"></a>需要知道的几种常量池类型</h2><h3 id="class文件中的常量池"><a href="#class文件中的常量池" class="headerlink" title="class文件中的常量池"></a>class文件中的常量池</h3><p>在class文件中存在一个常量池，主要存放编译期间生成的<a href="http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10" target="_blank" rel="external">字面量</a>和符号引用。其中的字面量就包括我们在java代码中用双引号括起来的字符串。我们可以通过jdk自带的<code>javap</code>工具查看class文件中的常量池和编译后的字节码。以下为java源码与<code>javap -v</code>部分输出：<br>java源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String... args)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"hello"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><code>javap -v</code>的部分输出：<br><figure class="highlight console"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">C:\...&gt;javap -v Main</div><div class="line">...(系统信息等)</div><div class="line">Constant Pool:</div><div class="line">   ...(其他字面量和符号引用)</div><div class="line"><span class="meta">   #</span>3 = String             #23            // hello</div><div class="line">   ...</div><div class="line"><span class="meta">  #</span>23 = Utf8               hello</div><div class="line">   ...</div><div class="line">...(字节码、行号、本地变量表等)</div></pre></td></tr></table></figure></p>
 <p>这两项分别表示class文件常量池中的<code>CONSTANT_String</code>和<code>CONSTANT_Utf8</code>类型的常量。其中，<code>CONSTANT_String</code>表示String常量的类型，但它并没有持有String常量的内容，而是指向另一个常量类型为<code>CONSTANT_Utf8</code>的常量，在那里才真正存储着String常量的内容（注意这里仅仅保存着内容，而不是字符串实例）。具体的class文件中的常量池格式可以查看<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4" target="_blank" rel="external">JVM规范-4.4. The Constant Pool</a>。</p>
 <h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>直接查看<a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.5" target="_blank" rel="external">JVM规范-2.5.5. Run-Time Constant Pool</a>：</p>
@@ -449,6 +451,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/08/31/Java移位运算符-学习总结/" rel="prev" title="Java移位运算符-学习总结">
+                Java移位运算符-学习总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -524,7 +530,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -546,7 +552,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
